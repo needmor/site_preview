@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOLVD. AI Videoproduction - High-Tech Concept</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #f4f6f9;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --accent-pink: #ff3366;
+            --accent-cyan: #00ffcc;
+            --accent-blue: #0055ff;
+            --grid-bg: #ffffff;
+            --grid-border: #e5e7eb;
+            --font-mono: 'Space Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Полностью прячем системный курсор везде */
+        *, *::before, *::after {
+            cursor: none !important;
+        }
+
+        /* --- ЗАДНИЙ ПЛАН: ГРАДИЕНТ, СЕТКА И ШУМ --- */
+        .bg-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, #ffffff 0%, #e9edf3 100%);
+        }
+
+        .bg-pattern {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.7;
+        }
+
+        .bg-noise {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            mix-blend-mode: multiply;
+        }
+
+        /* --- КУРСОР-СВЕЧЕНИЕ НА ЗАДНЕМ ПЛАНЕ --- */
+        .cursor-blur {
+            position: fixed;
+            top: 0; left: 0;
+            width: 450px; height: 450px;
+            background: radial-gradient(circle, rgba(0, 85, 255, 0.08) 0%, rgba(0, 85, 255, 0.02) 40%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate3d(-1000px, -1000px, 0);
+            will-change: transform;
+            z-index: 1; 
+        }
+
+        /* --- КАСТОМНЫЙ ИНВЕРТИРОВАННЫЙ КРЕСТИК --- */
+        .custom-cursor {
+            position: fixed;
+            top: 0; left: 0;
+            width: 14px; height: 14px;
+            pointer-events: none;
+            mix-blend-mode: difference;
+            z-index: 10000;
+            will-change: transform, opacity;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-cursor::before,
+        .custom-cursor::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            background-color: #ffffff;
+            will-change: transform;
+            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .custom-cursor::before {
+            width: 14px; height: 1px; 
+            transform: translate(-50%, -50%) scaleX(1);
+        }
+
+        .custom-cursor::after {
+            width: 1px; height: 14px; 
+            transform: translate(-50%, -50%) scaleY(1);
+        }
+
+        .custom-cursor.hover::before {
+            transform: translate(-50%, -50%) scaleX(1.8);
+        }
+
+        .custom-cursor.hover::after {
+            transform: translate(-50%, -50%) scaleY(1.8);
+        }
+
+        /* --- КОНТЕНТ --- */
+        .wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+            z-index: 10; 
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10vh;
+        }
+
+        .logo {
+            font-family: var(--font-sans);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--accent-blue); 
+        }
+
+        .contacts a {
+            font-family: var(--font-mono);
+            font-size: 14px; 
+            letter-spacing: 1px;
+            text-transform: lowercase; 
+            text-decoration: none;
+            color: var(--text-muted);
+            margin-left: 30px;
+            font-weight: 400;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .contacts a::before {
+            content: '>';
+            position: absolute;
+            left: -15px;
+            opacity: 0;
+            color: var(--accent-blue); 
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateX(-5px);
+        }
+
+        .contacts a:hover {
+            color: var(--text-main);
+        }
+
+        .contacts a:hover::before {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: block; 
+        }
+
+        /* --- ТАЙТЛ --- */
+        .title {
+            font-family: var(--font-mono);
+            line-height: 1;
+            margin-bottom: 60px;
+            position: relative;
+            font-size: 14px; 
+            font-weight: 400; 
+            letter-spacing: 1px;
+            text-transform: lowercase; 
+            z-index: 20;
+            text-align: center;
+        }
+
+        .title-ai {
+            color: var(--accent-blue); 
+            font-weight: 700;
+            margin-right: 5px;
+        }
+
+        .title-video {
+            color: var(--text-muted);
+        }
+
+        /* --- СЕТКА --- */
+        .grid-container {
+            position: relative;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+        }
+
+        .grid-item {
+            display: block; 
+            text-decoration: none; 
+            background-color: #000; 
+            border: 1px solid var(--grid-border);
+            aspect-ratio: 16 / 9; 
+            width: 100%;
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.4s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            border-radius: 4px; 
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+        }
+
+        .grid-item video,
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            display: block;
+        }
+
+        .card-gradient {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .meta {
+            position: absolute;
+            bottom: 16px;
+            left: 16px; 
+            z-index: 2;
+            color: #ffffff;
+            font-family: var(--font-sans);
+            pointer-events: none;
+        }
+
+        .meta-title {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.3px;
+        }
+
+        /* Более выраженная тень и высокое поднятие из V1 */
+        .grid-item:hover {
+            border-color: #cbd5e1;
+            transform: translateY(-8px); 
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .grid-item.large {
+            grid-column: span 3;
+        }
+
+        .grid-item.small {
+            grid-column: span 2;
+        }
+
+        /* --- КНОПКА VIEW ALL PROJECTS --- */
+        .view-all-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 60px; /* Отступ от сетки */
+        }
+
+        .btn-view-all {
+            padding: 14px 32px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 85, 255, 0.3);
+            background: rgba(255, 255, 255, 0.5);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-main);
+            text-decoration: none;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-view-all:hover {
+            background: #fff;
+            box-shadow: 0 0 20px rgba(0, 85, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* --- БЛОК ABOUT & CLIENTS --- */
+        .about {
+            margin-top: 100px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            align-items: flex-start;
+            font-family: var(--font-mono);
+        }
+
+        .about-clients {
+            grid-column: 2 / 5; 
+            min-width: 0; 
+        }
+
+        .about-text {
+            grid-column: span 2; 
+            min-width: 0; 
+            padding-left: 16px; 
+        }
+
+        .about-label {
+            font-size: 14px; 
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .about-logos {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 30px 40px;
+            color: rgba(17, 24, 39, 0.4); 
+            max-width: 420px; 
+        }
+
+        .about-logos span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: default; 
+        }
+
+        .about-text p {
+            font-size: 14px; 
+            line-height: 1.8;
+            color: var(--text-muted);
+        }
+
+        /* --- НОВЫЙ ФУТЕР --- */
+        .contact-footer {
+            position: relative; /* Добавлено для позиционирования синей линии */
+            margin-top: 100px;
+            padding: 80px 0 40px 0;
+            border-top: 1px solid var(--grid-border);
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 40px;
+        }
+
+        /* Тонкая синяя линия поверх границы футера */
+        /*.contact-footer::before {
+            content: '';
+            position: absolute;
+            top: -1px; /* Сдвигаем на 1px вверх, чтобы перекрыть серую границу */
+          /*  right: 0; 
+            width: 80px; 
+            height: 1px;
+            background-color: var(--accent-blue); 
+        }*/
+
+        .footer-brand { 
+            grid-column: span 4; 
+        }
+        
+        .footer-contacts { 
+            grid-column: span 4; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 24px; 
+        }
+        
+        .footer-socials { 
+            grid-column: span 4; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            text-align: right; 
+        }
+
+        .footer-label { 
+            font-family: var(--font-mono);
+            font-size: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            color: var(--text-muted); 
+            margin-bottom: 10px; 
+            display: block; 
+        }
+
+        .footer-link { 
+            font-family: var(--font-sans);
+            color: var(--text-main); 
+            text-decoration: none; 
+            font-size: 14px; 
+            font-weight: 500;
+            transition: color 0.3s; 
+        }
+
+        .footer-link:hover { 
+            color: var(--accent-blue); 
+        }
+
+        .footer-address { 
+            font-family: var(--font-sans);
+            font-size: 13px; 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+        }
+
+        /* --- УЛУЧШЕНИЕ UX: Отключаем кастомный курсор на тач-устройствах --- */
+        @media (pointer: coarse) {
+            *, *::before, *::after { cursor: auto !important; }
+            .custom-cursor { display: none !important; }
+        }
+
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+            .grid-item.large, .grid-item.small { grid-column: span 2; }
+            .header { margin-bottom: 5vh; }
+            
+            .about { display: flex; flex-direction: column; gap: 40px; margin-top: 60px; }
+            .about-clients { padding-right: 0; }
+            .about-logos { max-width: 100%; }
+            .about-text { width: 100%; margin-left: 0; padding-left: 0; }
+            
+            .contact-footer { display: flex; flex-direction: column; gap: 40px; text-align: left; }
+            /* На мобильных смещаем синюю линию влево, т.к. выравнивание текста тоже слева */
+            .contact-footer::before { right: auto; left: 0; width: 40px; } 
+            .footer-socials { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="bg-layer" data-parallax="-0.05">
+        <div class="bg-gradient"></div>
+        <canvas class="bg-pattern" id="grid-canvas"></canvas>
+        <div class="bg-noise"></div>
+    </div>
+
+    <div class="cursor-blur" id="cursor-blur"></div>
+    <div class="custom-cursor" id="custom-cursor"></div>
+
+    <div class="wrapper">
+        <header class="header">
+            <div class="logo">SOLVD<span>.</span></div>
+            <div class="contacts">
+                <a href="#">Telegram</a>
+                <a href="#">Mail</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <h1 class="title">
+                <span class="title-ai">ai</span> <span class="title-video">video production.</span>
+            </h1>
+
+            <div class="grid-container" data-parallax="0.15">
+                <div class="grid">
+                    <a href="#project-1" class="grid-item large">
+                        <video autoplay muted loop playsinline preload="none" poster="assets/Project_1.jpeg">
+                            <source src="assets/Project_1.webm" type="video/webm">
+                            <source src="assets/Project_1.mp4" type="video/mp4">
+                            <img src="assets/Project_1.jpeg" alt="Yandex Go Serbia" loading="lazy">
+                        </video>
+                        <div class="card-gradient"></div>
+                        <div class="meta">
+                            <div class="meta-title">Yandex Go Serbia</div>
+                        </div>
+                    </a>
+                    
+                    <a href="#project-2" class="grid-item large">
+                        <video autoplay muted loop playsinline preload="none" poster="assets/Project_2.jpeg">
+                            <source src="assets/Project_2.webm" type="video/webm">
+                            <source src="assets/Project_2.mp4" type="video/mp4">
+                            <img src="assets/Project_2.jpeg" alt="Mastercard Campaign" loading="lazy">
+                        </video>
+                        <div class="card-gradient"></div>
+                        <div class="meta">
+                            <div class="meta-title">Mastercard</div>
+                        </div>
+                    </a>
+
+                    <a href="#project-3" class="grid-item small">
+                        <video autoplay muted loop playsinline preload="none" poster="assets/Project_3.jpeg">
+                            <source src="assets/Project_3.webm" type="video/webm">
+                            <source src="assets/Project_3.mp4" type="video/mp4">
+                            <img src="assets/Project_3.jpeg" alt="Originals Short Film" loading="lazy">
+                        </video>
+                        <div class="card-gradient"></div>
+                        <div class="meta">
+                            <div class="meta-title">KIA</div>
+                        </div>
+                    </a>
+
+                    <a href="#project-4" class="grid-item small">
+                        <video autoplay muted loop playsinline preload="none" poster="assets/Project_4.jpeg">
+                            <source src="assets/Project_4.webm" type="video/webm">
+                            <source src="assets/Project_4.mp4" type="video/mp4">
+                            <img src="assets/Project_4.jpeg" alt="Yandex Go Charge" loading="lazy">
+                        </video>
+                        <div class="card-gradient"></div>
+                        <div class="meta">
+                            <div class="meta-title">Yandex Go</div>
+                        </div>
+                    </a>
+
+                    <a href="#project-5" class="grid-item small">
+                        <video autoplay muted loop playsinline preload="none" poster="assets/Project_5.jpeg">
+                            <source src="assets/Project_5.webm" type="video/webm">
+                            <source src="assets/Project_5.mp4" type="video/mp4">
+                            <img src="assets/Project_5.jpeg" alt="Chanel Campaign" loading="lazy">
+                        </video>
+                        <div class="card-gradient"></div>
+                        <div class="meta">
+                            <div class="meta-title">Chanel</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Добавлена кнопка из V1 -->
+            <div class="view-all-container">
+                <a href="#" class="btn-view-all">view all projects</a>
+            </div>
+
+            <!-- БЛОК ABOUT & CLIENTS -->
+            <section class="about" data-parallax="0.05">
+                 <div class="about-clients">
+                   <div class="about-label">Worked with:</div>
+                    <div class="about-logos">
+                        <span><span style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.5px;">Yandex</span></span>
+                  
+                        <span>
+                            <svg width="26" height="16" viewBox="0 0 100 60"><circle cx="30" cy="30" r="30" fill="currentColor" fill-opacity="0.6"/><circle cx="70" cy="30" r="30" fill="currentColor" fill-opacity="0.6"/></svg>
+                            <span style="font-family: 'Inter', sans-serif; font-weight: 500; font-size: 14px; letter-spacing: -0.3px;">mastercard</span>
+                        </span>
+
+                        <span><span style="font-family: 'Times New Roman', serif; font-weight: bold; font-size: 15px; letter-spacing: 1px; text-transform: uppercase;">Chanel</span></span>
+                    </div>
+                </div>
+
+                <div class="about-text">
+                    <div class="about-label">About SOLVD.</div>
+                    <p>
+                        AI-first video production studio.<br>
+                        We combine live action, VFX and<br>
+                        generative pipelines to create<br>
+                        content between real and<br>
+                        imagined.
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Заменен футер на версию из V1 -->
+        <footer id="contacts" class="contact-footer">
+            <div class="footer-brand">
+                <div class="logo" style="margin-bottom: 20px;">SOLVD<span>.</span></div>
+                <p class="footer-address">
+                    Bulevar despota Stefana 12<br>
+                    Belgrade, Serbia 11000<br>
+                    EU Production HQ
+                </p>
+            </div>
+            <div class="footer-contacts">
+                <div>
+                    <span class="footer-label">inquiries</span>
+                    <a href="mailto:hello@solvd.ai" class="footer-link">hello@solvd.ai</a>
+                </div>
+                <div>
+                    <span class="footer-label">new business</span>
+                    <a href="#" class="footer-link">+381 60 123 4567</a>
+                </div>
+            </div>
+            <div class="footer-socials">
+                <span class="footer-label">follow</span>
+                <a href="#" class="footer-link">Instagram</a>
+                <a href="#" class="footer-link">Telegram</a>
+                <a href="#" class="footer-link">LinkedIn</a>
+                <a href="#" class="footer-link">Vimeo</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let currentX = 0, currentY = 0;
+        
+        let absMouseX = -1000;
+        let absMouseY = -1000;
+
+        const cursorBlur = document.getElementById('cursor-blur');
+        const customCursor = document.getElementById('custom-cursor');
+
+        document.addEventListener('mouseenter', () => customCursor.style.opacity = '1');
+        document.addEventListener('mouseleave', () => {
+            customCursor.style.opacity = '0';
+            absMouseX = -1000;
+            absMouseY = -1000;
+        });
+
+        // Назначаем hover-эффект кастомному курсору
+        document.querySelectorAll('a').forEach(el => {
+            el.addEventListener('mouseenter', () => customCursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => customCursor.classList.remove('hover'));
+        });
+
+        const parallaxElements = Array.from(document.querySelectorAll('[data-parallax]')).map(el => ({
+            element: el,
+            speed: parseFloat(el.getAttribute('data-parallax')) * 0.1
+        }));
+
+        let isRunning = true;
+        document.addEventListener('visibilitychange', () => {
+            isRunning = !document.hidden;
+        });
+
+        let isMobile = window.matchMedia('(max-width: 900px)').matches;
+
+        const gridCanvas = document.getElementById('grid-canvas');
+        const ctx = gridCanvas.getContext('2d');
+        let points = [];
+        const spacing = 40; 
+        let cols, rows;
+
+        function initGrid() {
+            isMobile = window.matchMedia('(max-width: 900px)').matches;
+            gridCanvas.width = window.innerWidth;
+            gridCanvas.height = window.innerHeight;
+
+            if (isMobile) {
+                ctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+                return; 
+            }
+
+            cols = Math.ceil(gridCanvas.width / spacing) + 1;
+            rows = Math.ceil(gridCanvas.height / spacing) + 1;
+            points = [];
+            for (let i = 0; i < cols; i++) {
+                points[i] = [];
+                for (let j = 0; j < rows; j++) {
+                    points[i][j] = {
+                        baseX: i * spacing,
+                        baseY: j * spacing,
+                        x: i * spacing,
+                        y: j * spacing
+                    };
+                }
+            }
+        }
+
+        window.addEventListener('resize', initGrid);
+        initGrid();
+
+        function drawInteractiveGrid() {
+            if (isMobile) return;
+
+            ctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.04)'; 
+            ctx.lineWidth = 1;
+
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    let p = points[i][j];
+                    let dx = absMouseX - p.baseX;
+                    let dy = absMouseY - p.baseY;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    let maxDist = 180; 
+
+                    let targetX = p.baseX;
+                    let targetY = p.baseY;
+
+                    if (dist < maxDist) {
+                        let force = (maxDist - dist) / maxDist;
+                        targetX += dx * force * 0.4;
+                        targetY += dy * force * 0.4;
+                    }
+
+                    p.x += (targetX - p.x) * 0.25;
+                    p.y += (targetY - p.y) * 0.25;
+                }
+            }
+
+            ctx.beginPath();
+            for (let j = 0; j < rows; j++) {
+                for (let i = 0; i < cols; i++) {
+                    if (i === 0) ctx.moveTo(points[i][j].x, points[i][j].y);
+                    else ctx.lineTo(points[i][j].x, points[i][j].y);
+                }
+            }
+            ctx.stroke();
+
+            ctx.beginPath();
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    if (j === 0) ctx.moveTo(points[i][j].x, points[i][j].y);
+                    else ctx.lineTo(points[i][j].x, points[i][j].y);
+                }
+            }
+            ctx.stroke();
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            if (customCursor.style.opacity !== '1') customCursor.style.opacity = '1';
+
+            absMouseX = e.clientX;
+            absMouseY = e.clientY;
+
+            mouseX = (e.clientX - window.innerWidth / 2);
+            mouseY = (e.clientY - window.innerHeight / 2);
+
+            cursorBlur.style.transform = `translate3d(${e.clientX - 225}px, ${e.clientY - 225}px, 0)`;
+            customCursor.style.transform = `translate3d(${e.clientX - 7}px, ${e.clientY - 7}px, 0)`;
+        });
+
+        let lastCanvasFrame = 0;
+
+        function animate(time) {
+            requestAnimationFrame(animate);
+            if (!isRunning) return; 
+
+            const ease = 0.05;
+            currentX += (mouseX - currentX) * ease;
+            currentY += (mouseY - currentY) * ease;
+
+            parallaxElements.forEach(item => {
+                item.element.style.transform = `translate3d(${currentX * item.speed}px, ${currentY * item.speed}px, 0)`;
+            });
+
+            if (time - lastCanvasFrame >= 33) {
+                drawInteractiveGrid();
+                lastCanvasFrame = time;
+            }
+        }
+        
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
