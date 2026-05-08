@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOLVD. AI Videoproduction - High-Tech Concept</title>
+    <title>SOLVD. All Projects - High-Tech Concept</title>
     
     <!-- PRECONNECT & FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,12 +54,8 @@
         }
 
         /* Scroll margins for smooth anchor navigation from the top menu */
-        #projects, #expertise, #team, #contacts {
+        #projects, #contacts {
             scroll-margin-top: 100px;
-        }
-        
-        #about {
-            scroll-margin-top: 250px;
         }
 
         /* ==========================================================================
@@ -187,8 +183,13 @@
             font-family: var(--font-mono);
         }
 
-        .nav-menu a:hover {
+        .nav-menu a:hover,
+        .nav-menu a.active {
             color: var(--accent-blue);
+        }
+
+        .nav-menu a.active {
+            pointer-events: none;
         }
 
         .title {
@@ -207,24 +208,6 @@
         .title-ai { color: var(--accent-blue); font-weight: 700; margin-right: 5px; }
         .title-video { color: var(--text-muted); }
 
-        /* Universal Section Label */
-        .section-label {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 40px;
-            text-transform: lowercase;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .section-label::after {
-            content: ''; height: 1px; flex-grow: 1; max-width: 60px;
-            background: var(--accent-blue); opacity: 0.3;
-        }
-
         /* ==========================================================================
            05. PROJECTS GRID SECTION
            ========================================================================== */
@@ -233,6 +216,7 @@
             grid-template-columns: repeat(6, 1fr);
             gap: 16px;
             perspective: 1500px;
+            margin-bottom: 100px;
         }
 
         .grid-item {
@@ -275,133 +259,11 @@
             /* Transform and shadow are fully controlled via JS (3D Parallax module) */
         }
 
+        /* Large modifier for the All Projects layout */
         .grid-item.large { grid-column: span 3; }
-        .grid-item.small { grid-column: span 2; }
-
-        .view-all-container {
-            display: flex; justify-content: center; margin-top: 60px;
-        }
-
-        .btn-view-all {
-            padding: 14px 32px; border-radius: 50px; border: 1px solid rgba(0, 85, 255, 0.3);
-            background: rgba(255, 255, 255, 0.5); font-family: var(--font-mono); font-size: 12px;
-            color: var(--text-main); text-decoration: none; text-transform: lowercase;
-            letter-spacing: 1px; transition: all 0.4s ease; position: relative; z-index: 10;
-        }
-
-        .btn-view-all:hover {
-            background: #fff; box-shadow: 0 0 20px rgba(0, 85, 255, 0.2); transform: translateY(-2px);
-        }
 
         /* ==========================================================================
-           06. ABOUT SECTION
-           ========================================================================== */
-        .about {
-            margin-top: 100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            font-family: var(--font-mono);
-        }
-
-        .about-text { max-width: 800px; }
-        .about-label { font-size: 14px; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 24px; }
-        .about-text p { font-size: 14px; line-height: 1.8; color: var(--text-muted); }
-        .mobile-break { display: none; }
-
-        /* ==========================================================================
-           07. EXPERTISE SECTION
-           ========================================================================== */
-        .expertise-section { margin-top: 150px; }
-        .expertise-intro { font-family: var(--font-mono); font-size: 14px; font-weight: 400; color: var(--text-muted); line-height: 1.8; max-width: 800px; margin-bottom: 80px; }
-        .expertise-list { display: flex; flex-direction: column; gap: 120px; margin-bottom: 150px; }
-        
-        .expertise-item { 
-            display: grid; grid-template-columns: repeat(12, 1fr); gap: 60px; align-items: center; 
-            will-change: transform;
-            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .expertise-item:nth-child(even) { direction: rtl; }
-        .expertise-item:nth-child(even) .expertise-text { direction: ltr; }
-        
-        .exp-media { 
-            grid-column: span 6; aspect-ratio: 16 / 9; background: #000; border-radius: var(--card-radius); overflow: hidden; border: 1px solid var(--grid-border); box-shadow: 0 4px 20px rgba(0,0,0,0.02); 
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-        }
-        .exp-media video { width: 100%; height: 100%; object-fit: cover; }
-        .expertise-text { grid-column: span 6; }
-        
-        .exp-num { font-size: 10px; color: var(--accent-blue); margin-bottom: 12px; display: block; }
-        .exp-title { font-family: var(--font-sans); font-size: 16px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.3px; color: var(--text-main); }
-        .exp-desc { font-family: var(--font-mono); font-size: 14px; line-height: 1.8; color: var(--text-muted); }
-
-        /* ==========================================================================
-           08. TEAM SECTION
-           ========================================================================== */
-        .team-section { margin-top: 150px; margin-bottom: 80px; }
-        .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; perspective: 1500px; } 
-        
-        .team-member { 
-            background: rgba(255, 255, 255, 0.4); 
-            border: 1px solid var(--grid-border); 
-            padding: 0;
-            border-radius: var(--card-radius); 
-            display: flex; 
-            flex-direction: column; 
-            will-change: transform, box-shadow;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-            /* Smooth animation fallback to return card to initial state */
-            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease, background-color 0.4s ease;
-        }
-        
-        .team-member:hover { 
-            background: white; 
-            z-index: 2; 
-        }
-        
-        .team-photo-container { 
-            width: 50%; 
-            aspect-ratio: 1/1; 
-            background: #111827; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            margin: 24px 24px 0 24px;
-            border-radius: 4px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-
-        .team-photo-container img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            filter: grayscale(100%); 
-            transition: filter 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); 
-            border-radius: 4px; 
-            transform: scale(1.08) translate3d(0, 0, 0);
-            will-change: transform, filter;
-            transform-origin: center;
-        }
-        .team-member:hover .team-photo-container img { filter: grayscale(0%); }
-        
-        .team-details { 
-            padding: 24px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 8px;
-        }
-        
-        .team-name { font-family: var(--font-sans); font-weight: 600; font-size: 16px; color: var(--text-main); letter-spacing: -0.3px; }
-        .team-role { font-family: var(--font-mono); font-size: 10px; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 4px; }
-        .team-bio { font-family: var(--font-mono); font-size: 14px; color: var(--text-muted); line-height: 1.8; }
-
-        /* ==========================================================================
-           09. FOOTER
+           06. FOOTER
            ========================================================================== */
         .contact-footer { 
             margin-top: auto; 
@@ -445,9 +307,9 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 15px; /* Увеличиваем кликабельную зону */
-            margin-right: -15px; /* Компенсируем padding, чтобы выровнять по правому краю */
-            margin-top: -30px; /* Поднимаем кнопку выше */
+            padding: 15px; 
+            margin-right: -15px; 
+            margin-top: -30px; 
         }
         .back-to-top:hover {
             color: var(--accent-blue);
@@ -455,35 +317,17 @@
         }
 
         /* ==========================================================================
-           10. RESPONSIVE DESIGN (MOBILE & TABLETS)
+           07. RESPONSIVE DESIGN (MOBILE & TABLETS)
            ========================================================================== */
         @media (max-width: 900px) {
-            .grid { grid-template-columns: repeat(2, 1fr); }
-            .grid-item.large, .grid-item.small { grid-column: span 2; }
-            .expertise-intro { margin-bottom: 40px; }
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .grid-item.large { grid-column: span 2; }
             
-            /* Show line breaks in text on mobile */
-            .mobile-break { display: inline; }
-
             /* Hard disable 3D transforms on mobile for better performance */
             .grid-item { transform: none !important; }
             .grid-item:hover { transform: none !important; }
             .meta, .card-gradient { transform: none !important; }
 
-            .expertise-item { 
-                display: flex; flex-direction: column; gap: 30px; 
-                transform: none !important;
-            }
-            .expertise-item:nth-child(even) { direction: ltr; }
-            .exp-media, .expertise-text { transform: none !important; }
-            
-            .team-grid { grid-template-columns: 1fr; perspective: none; }
-            .team-member { 
-                transform: none !important; 
-                box-shadow: 0 4px 20px rgba(0,0,0,0.02) !important;
-            }
-            .team-photo-container, .team-details { transform: none !important; }
-            
             .contact-footer { display: flex; flex-direction: column; text-align: left; }
             .footer-socials { text-align: left; }
             .nav-menu { display: none; } 
@@ -519,17 +363,17 @@
         <header class="header">
             <a href="index.html" class="logo">SOLVD<span>.</span></a>
             <nav class="nav-menu">
-                <a href="works.html">projects</a>
-                <a href="#about">about</a>
-                <a href="#expertise">expertise</a>
-                <a href="#team">team</a>
+                <a href="#" class="active">projects</a>
+                <a href="index.html#about">about</a>
+                <a href="index.html#expertise">expertise</a>
+                <a href="index.html#team">team</a>
                 <a href="#contacts">contacts</a>
             </nav>
         </header>
 
         <main class="main-content">
             <h1 class="title">
-                <span class="title-ai">ai</span> <span class="title-video">video production.</span>
+                <span class="title-ai">all</span> <span class="title-video">projects.</span>
             </h1>
 
             <div class="grid-container" id="projects" data-parallax="0.15">
@@ -537,143 +381,6 @@
                     <!-- Projects are generated dynamically here from js/projects.js -->
                 </div>
             </div>
-
-            <div class="view-all-container">
-                <a href="works.html" class="btn-view-all">view all projects</a>
-            </div>
-
-            <section id="about" class="about" data-parallax="0.05">
-                <div class="about-text">
-                    <div class="about-label">About SOLVD.</div>
-                    <p>
-                        AI-first video production studio. <br class="mobile-break">
-                        We combine live action, VFX and <br class="mobile-break">
-                        generative pipelines to achieve <br class="mobile-break">
-                        high-end production quality <br class="mobile-break">
-                        with the speed and efficiency
-                        of AI.
-                    </p>
-                </div>
-            </section>
-
-            <!-- EXPERTISE SECTION -->
-            <section id="expertise" class="expertise-section">
-                <div class="section-label">expertise</div>
-                <p class="expertise-intro"></p>
-                <div class="expertise-list">
-                    <div class="expertise-item">
-                        <div class="exp-media">
-                            <video autoplay muted loop playsinline preload="none" poster="assets/expertise/expertise_1/img.jpg">
-                                <source src="assets/expertise/expertise_1/vid.webm" type="video/webm">
-                                <source src="assets/expertise/expertise_1/vid.mp4" type="video/mp4">
-                                <img src="assets/expertise/expertise_1/img.jpg" alt="Full-Cycle Production">
-                            </video>
-                        </div>
-                        <div class="expertise-text">
-                            <span class="exp-num">01/</span>
-                            <h3 class="exp-title">Full-Cycle Production</h3>
-                            <p class="exp-desc">11 years of real production experience allow us to handle every stage, from initial brief to final delivery.</p>
-                        </div>
-                    </div>
-
-                    <div class="expertise-item">
-                        <div class="exp-media">
-                            <video autoplay muted loop playsinline preload="none" poster="assets/expertise/expertise_2/img.jpg">
-                                <source src="assets/expertise/expertise_2/vid.webm" type="video/webm">
-                                <source src="assets/expertise/expertise_2/vid.mp4" type="video/mp4">
-                                <img src="assets/expertise/expertise_2/img.jpg" alt="Creative Direction">
-                            </video>
-                        </div>
-                        <div class="expertise-text">
-                            <span class="exp-num">02/</span>
-                            <h3 class="exp-title">Creative</h3>
-                            <p class="exp-desc">Concept development and creative strategy. We design visual narratives tailored specifically for commercial standards.</p>
-                        </div>
-                    </div>
-
-                    <div class="expertise-item">
-                        <div class="exp-media">
-                            <video autoplay muted loop playsinline preload="none" poster="assets/expertise/expertise_3/img.jpg">
-                                <source src="assets/expertise/expertise_3/vid.webm" type="video/webm">
-                                <source src="assets/expertise/expertise_3/vid.mp4" type="video/mp4">
-                                <img src="assets/expertise/expertise_3/img.jpg" alt="Advanced AI Pipelines">
-                            </video>
-                        </div>
-                        <div class="expertise-text">
-                            <span class="exp-num">03/</span>
-                            <h3 class="exp-title">Advanced AI Pipelines</h3>
-                            <p class="exp-desc">Custom AI models and complex generative workflows. We engineer AI solutions that meet the standards of traditional commercial production.</p>
-                        </div>
-                    </div>
-
-                    <div class="expertise-item">
-                        <div class="exp-media">
-                            <video autoplay muted loop playsinline preload="none" poster="assets/expertise/expertise_4/img.jpg">
-                                <source src="assets/expertise/expertise_4/vid.webm" type="video/webm">
-                                <source src="assets/expertise/expertise_4/vid.mp4" type="video/mp4">
-                                <img src="assets/expertise/expertise_4/img.jpg" alt="AI-Enhanced VFX">
-                            </video>
-                        </div>
-                        <div class="expertise-text">
-                            <span class="exp-num">04/</span>
-                            <h3 class="exp-title">AI-Enhanced VFX</h3>
-                            <p class="exp-desc">Next-generation visual effects. We use AI-driven workflows to achieve the quality of traditional VFX production with far greater speed and efficiency.</p>
-                        </div>
-                    </div>
-
-                    <div class="expertise-item">
-                        <div class="exp-media">
-                            <video autoplay muted loop playsinline preload="none" poster="assets/expertise/expertise_5/img.jpg">
-                                <source src="assets/expertise/expertise_5/vid.webm" type="video/webm">
-                                <source src="assets/expertise/expertise_5/vid.mp4" type="video/mp4">
-                                <img src="assets/expertise/expertise_5/img.jpg" alt="CG 3D & AI Integration">
-                            </video>
-                        </div>
-                        <div class="expertise-text">
-                            <span class="exp-num">05/</span>
-                            <h3 class="exp-title">CG & AI Integration</h3>
-                            <p class="exp-desc">We use AI to accelerate and optimize advanced CGI production workflows. Enabling faster iteration and more flexible creative execution.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TEAM SECTION -->
-            <section id="team" class="team-section">
-                <div class="section-label">team</div>
-                <div class="team-grid">
-                    <div class="team-member">
-                        <div class="team-photo-container">
-                            <img src="assets/team/team_1.jpg" alt="Alex Sokolov">
-                        </div>
-                        <div class="team-details">
-                            <h4 class="team-name">Nikolay Volchkov</h4>
-                            <span class="team-role">head of production & CEO</span>
-                            <p class="team-bio"> 8 years in creative industries, managing large-scale video productions and full-cycle project execution.</p>
-                        </div>
-                    </div>
-                    <div class="team-member">
-                        <div class="team-photo-container">
-                            <img src="assets/team/team_2.jpg" alt="Michael Belov">
-                        </div>
-                        <div class="team-details">
-                            <h4 class="team-name">Alex Ody</h4>
-                            <span class="team-role">Tech director</span>
-                            <p class="team-bio">11 years in commercials and documentary filmmaking, specializing in post-production, editing, VFX, and technical pipelines.</p>
-                        </div>
-                    </div>
-                    <div class="team-member">
-                        <div class="team-photo-container">
-                            <img src="assets/team/team_3.jpg" alt="Elena Markova">
-                        </div>
-                        <div class="team-details">
-                            <h4 class="team-name">Sasha Needmor</h4>
-                            <span class="team-role">Creative Director</span>
-                            <p class="team-bio">7 years directing commercials and music videos, focused on visual storytelling, creative concepts, and cinematic execution.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </main>
 
         <footer id="contacts" class="contact-footer">
@@ -699,7 +406,7 @@
                 <span class="footer-label">follow</span>
                 <a href="#!" class="footer-link">Instagram</a>
                 <a href="#!" class="footer-link">Telegram</a>
-               <!--    <a href="#!" class="footer-link">LinkedIn</a> -->
+               <!-- <a href="#!" class="footer-link">LinkedIn</a> -->
                 <a href="#!" class="footer-link">Vimeo</a>
             </div>
             
@@ -726,21 +433,18 @@
         let isMobile = window.matchMedia('(max-width: 900px)').matches;
 
         /* ==========================================================================
-           02. DYNAMIC PROJECTS RENDERING
+           02. DYNAMIC PROJECTS RENDERING (ALL PROJECTS)
            ========================================================================== */
         const projectGrid = document.getElementById('dynamic-projects-grid');
         
         if (projectGrid && typeof PROJECTS !== 'undefined') {
-            const layoutClasses = ['large', 'large', 'small', 'small', 'small'];
-            // Render only the first 5 projects on the home page
-            const projectsToRender = PROJECTS.slice(0, 5);
-
-            projectsToRender.forEach((project, i) => {
-                const layoutClass = layoutClasses[i] || 'small'; // Fallback mapping
+            PROJECTS.forEach((project) => {
                 const anchor = document.createElement('a');
                 
                 anchor.href = `project.html?slug=${project.slug}`;
-                anchor.className = `grid-item ${layoutClass}`;
+                // Apply the 'large' class to all items for the All Projects layout
+                anchor.className = 'grid-item large'; 
+                
                 anchor.innerHTML = `
                     <video autoplay muted loop playsinline preload="none" poster="${project.poster}">
                         <source src="${project.previewWebm}" type="video/webm">
@@ -789,7 +493,7 @@
 
         // Add 'hover' class to cursor when pointing over interactive elements
         document.addEventListener('mouseover', (e) => {
-            if (e.target.closest('a, .grid-item, .team-member')) {
+            if (e.target.closest('a, .grid-item')) {
                 customCursor.classList.add('hover');
             } else {
                 customCursor.classList.remove('hover');
@@ -931,7 +635,6 @@
         function apply3DParallax(elements, hasInnerShadowElem = false, baseLift = 0) {
             elements.forEach(card => {
                 let rafId = null;
-                // For expertise section, the shadow falls from the video block; for others, from the card itself
                 const shadowTarget = hasInnerShadowElem ? card.querySelector('.exp-media') : card;
                 
                 card.addEventListener('mouseenter', () => {
@@ -939,9 +642,6 @@
                     
                     card.style.transition = 'transform 0.1s ease-out, box-shadow 0.1s ease-out, border-color 0.4s ease, background-color 0.4s ease';
                     if (shadowTarget !== card) shadowTarget.style.transition = 'box-shadow 0.1s ease-out';
-                    
-                    const teamPhoto = card.querySelector('.team-photo-container img');
-                    if (teamPhoto) teamPhoto.style.transition = 'transform 0.1s ease-out, filter 0.5s ease';
                 });
 
                 card.addEventListener('mousemove', (e) => {
@@ -976,15 +676,6 @@
                         const shadowOpacity = baseLift !== 0 ? 0.15 : 0.08; // Stronger shadow for "flying" cards
                         
                         shadowTarget.style.boxShadow = `${shadowX}px ${shadowY}px ${shadowBlur}px rgba(0, 0, 0, ${shadowOpacity})`; 
-
-                        // Inner team photo movement logic (if applicable)
-                        const teamPhoto = card.querySelector('.team-photo-container img');
-                        if (teamPhoto) {
-                            const imgMoveX = -rotateY * 5;
-                            const imgMoveY = rotateX * 5;
-                            const imgScale = 1.08;
-                            teamPhoto.style.transform = `scale(${imgScale}) translate3d(${imgMoveX}px, ${imgMoveY}px, 0)`;
-                        }
                     });
                 });
                 
@@ -996,20 +687,15 @@
                     card.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease, border-color 0.4s ease, background-color 0.4s ease';
                     card.style.transform = `perspective(1000px) translateY(0) scale(1) rotateX(0deg) rotateY(0deg)`;
                     shadowTarget.style.boxShadow = `0 4px 20px rgba(0,0,0,0.02)`;
-
-                    const teamPhoto = card.querySelector('.team-photo-container img');
-                    if (teamPhoto) {
-                        teamPhoto.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.5s ease';
-                        teamPhoto.style.transform = 'scale(1.08) translate3d(0, 0, 0)';
-                    }
                 });
             });
         }
 
-        // Apply 3D parallax to all interactive blocks
-        apply3DParallax(document.querySelectorAll('.grid-item'), false, -8);     // Projects: Lift up by 8px on hover
-        apply3DParallax(document.querySelectorAll('.team-member'), false, -10);  // Team: Lift up by 10px on hover
-        apply3DParallax(document.querySelectorAll('.expertise-item'), true, 0);  // Expertise: No lift, shadow applied to video container
+        // Apply 3D parallax to project cards (Lift up by 8px on hover)
+        // Set a small timeout to ensure dynamic elements are rendered before attaching listeners
+        setTimeout(() => {
+            apply3DParallax(document.querySelectorAll('.grid-item'), false, -8);     
+        }, 100);
 
     </script>
 </body>

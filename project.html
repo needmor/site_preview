@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOLVD. Project - High-Tech Concept</title>
+    
+    <!-- PRECONNECT & FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           01. CSS VARIABLES & RESET
+           ========================================================================== */
+        :root {
+            /* Colors */
+            --bg-base: #f4f6f9;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --accent-pink: #ff3366;
+            --accent-cyan: #00ffcc;
+            --accent-blue: #0055ff;
+            --grid-bg: #ffffff;
+            --grid-border: #e5e7eb;
+            
+            /* Typography */
+            --font-mono: 'Space Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+            
+            /* UI Elements */
+            --card-radius: 4px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==========================================================================
+           02. CUSTOM CURSOR
+           ========================================================================== */
+        /* Hide system cursor globally */
+        *, *::before, *::after {
+            cursor: none !important;
+        }
+
+        /* Restore default cursor specifically for video players controls */
+        .video-wrapper, .video-wrapper * {
+            cursor: auto !important;
+        }
+
+        .cursor-blur {
+            position: fixed;
+            top: 0; left: 0;
+            width: 450px; height: 450px;
+            background: radial-gradient(circle, rgba(0, 85, 255, 0.08) 0%, rgba(0, 85, 255, 0.02) 40%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate3d(-1000px, -1000px, 0);
+            will-change: transform;
+            z-index: 1; 
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-cursor {
+            position: fixed;
+            top: 0; left: 0;
+            width: 10px; 
+            height: 14.66px; 
+            pointer-events: none;
+            mix-blend-mode: difference;
+            z-index: 10000;
+            will-change: transform, opacity;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            /* Precise classic mouse contour rendered via SVG */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 23'%3E%3Cpath fill='%23FFFFFF' d='M0 0l16 11.25-6.68.96 4.3 8.35-3.3 1.7-4.3-8.35L0 18.6V0z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* ==========================================================================
+           03. BACKGROUND LAYERS (Gradient, Grid, Noise)
+           ========================================================================== */
+        .bg-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, #ffffff 0%, #e9edf3 100%);
+        }
+
+        .bg-pattern {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.7;
+        }
+
+        .bg-noise {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            mix-blend-mode: multiply;
+        }
+
+        /* ==========================================================================
+           04. MAIN LAYOUT & HEADER
+           ========================================================================== */
+        .wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+            z-index: 10; 
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10vh;
+        }
+
+        .logo {
+            font-family: var(--font-sans);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #000;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--accent-blue); }
+
+        .nav-menu {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 15px 10px;
+            font-size: 14px;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: color 0.3s;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            font-family: var(--font-mono);
+        }
+
+        .nav-menu a:hover {
+            color: var(--accent-blue);
+        }
+
+        /* ==========================================================================
+           05. PROJECT DETAILS LAYOUT
+           ========================================================================== */
+        /* Responsive Video Container */
+        .video-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto; 
+            background-color: #000;
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+            border: 1px solid var(--grid-border);
+            z-index: 20;
+            aspect-ratio: 16 / 9;
+            transition: aspect-ratio 0.4s ease;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: auto;
+        }
+
+        /* Information Grid */
+        .project-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid var(--grid-border);
+            position: relative;
+            z-index: 20;
+        }
+
+        .info-block {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .info-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .info-value {
+            font-family: var(--font-sans);
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        /* Project Navigation (Prev/Next) */
+        .project-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 80px;
+            margin-bottom: 60px;
+            padding-top: 40px;
+            border-top: 1px solid var(--grid-border);
+            position: relative;
+            z-index: 20;
+        }
+
+        .nav-btn {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            text-decoration: none;
+            color: var(--text-main);
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            transition: color 0.3s, opacity 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover:not(.disabled) {
+            color: var(--accent-blue);
+        }
+
+        .nav-btn.disabled {
+            color: var(--text-muted);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Not Found Message */
+        .not-found {
+            text-align: center;
+            margin: 15vh 0;
+            position: relative;
+            z-index: 20;
+        }
+
+        .not-found .title {
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        /* ==========================================================================
+           06. FOOTER
+           ========================================================================== */
+        .contact-footer { 
+            margin-top: auto; 
+            padding: 60px 0 40px 0; 
+            border-top: 1px solid var(--grid-border); 
+            display: grid; 
+            grid-template-columns: repeat(12, 1fr); 
+            gap: 40px; 
+            position: relative;
+            z-index: 20;
+        }
+        .footer-brand { grid-column: span 4; }
+        .footer-contacts { grid-column: span 4; display: flex; flex-direction: column; gap: 20px; }
+        .footer-socials { grid-column: span 4; display: flex; flex-direction: column; gap: 0px; text-align: right; }
+        .footer-label { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 2px; display: block; }
+        .footer-link { display: inline-block; padding: 10px 15px; margin-left: -15px; font-family: var(--font-mono); color: var(--text-main); text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .footer-socials .footer-label { margin-bottom: 4px; }
+        .footer-socials .footer-link { padding: 4px 10px; margin-left: 0; margin-right: -10px; }
+        .footer-link:hover { color: var(--accent-blue); }
+        .footer-address { font-family: var(--font-mono); font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+        
+        /* Special class for emails to use Inter (sans-serif) for better '@' readability */
+        .email-font { font-family: var(--font-sans); font-weight: 500; font-size: 15.5px; letter-spacing: -0.3px; }
+
+        /* Back to top row inside footer */
+        .footer-bottom {
+            grid-column: span 12;
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+        .back-to-top {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 15px; 
+            margin-right: -15px; 
+            margin-top: -30px; 
+        }
+        .back-to-top:hover {
+            color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        /* ==========================================================================
+           07. RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (max-width: 900px) {
+            .contact-footer { display: flex; flex-direction: column; text-align: left; }
+            .footer-socials { text-align: left; }
+            .nav-menu { display: none; } 
+            .project-nav { flex-direction: column; gap: 30px; }
+            .video-wrapper { transform: none !important; }
+
+            .footer-bottom {
+                justify-content: flex-start;
+                padding-top: 10px;
+            }
+        }
+
+        /* Fallback for devices without a fine pointer (touch devices) */
+        @media (pointer: coarse) {
+            *, *::before, *::after { cursor: auto !important; }
+            .custom-cursor { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- BACKGROUND WRAPPER -->
+    <div class="bg-layer" data-parallax="-0.05">
+        <div class="bg-gradient"></div>
+        <canvas class="bg-pattern" id="grid-canvas"></canvas>
+        <div class="bg-noise"></div>
+    </div>
+
+    <!-- CUSTOM CURSOR ELEMENTS -->
+    <div class="cursor-blur" id="cursor-blur"></div>
+    <div class="custom-cursor" id="custom-cursor"></div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <div class="wrapper">
+        <header class="header">
+            <a href="index.html" class="logo">SOLVD<span>.</span></a>
+            <nav class="nav-menu">
+                <a href="works.html">projects</a>
+                <a href="index.html#about">about</a>
+                <a href="index.html#expertise">expertise</a>
+                <a href="index.html#team">team</a>
+                <a href="#contacts">contacts</a>
+            </nav>
+        </header>
+
+        <main id="main-content" class="main-content" data-parallax="0.15">
+            <!-- Dynamic Content Renders Here -->
+        </main>
+
+        <footer id="contacts" class="contact-footer">
+            <div class="footer-brand">
+                <a href="index.html" class="logo" style="margin-bottom: 20px; display: inline-block;">SOLVD<span>.</span></a>
+              <!--  <p class="footer-address">
+                    Bulevar despota Stefana 12<br>
+                    Belgrade, Serbia 11000<br>
+                    EU Production HQ 
+                </p> -->
+            </div>
+            <div class="footer-contacts">
+                <div>
+                    <span class="footer-label">inquiries</span>
+                    <a href="mailto:hello@solvd.ai" class="footer-link email-font">hello@solvd.ai</a>
+                </div>
+             <!--   <div>
+                    <span class="footer-label">new business</span>
+                    <a href="#" class="footer-link">+381 60 123 4567</a>
+                </div> -->
+            </div>
+            <div class="footer-socials">
+                <span class="footer-label">follow</span>
+                <a href="#!" class="footer-link">Instagram</a>
+                <a href="#!" class="footer-link">Telegram</a>
+               <!--    <a href="#!" class="footer-link">LinkedIn</a> -->
+                <a href="#!" class="footer-link">Vimeo</a>
+            </div>
+            
+            <!-- BACK TO TOP BUTTON -->
+            <div class="footer-bottom">
+                <a href="#" class="back-to-top">back to top &uarr;</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- DATA SOURCE -->
+    <script src="js/projects.js"></script>
+
+    <script>
+        /* ==========================================================================
+           01. GLOBALS & STATE
+           ========================================================================== */
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let currentX = 0, currentY = 0;
+        let absMouseX = -1000;
+        let absMouseY = -1000;
+        
+        // Track whether the user is interacting with the video iframe
+        let isCursorOverVideo = false;
+
+        let isRunning = true;
+        let isMobile = window.matchMedia('(max-width: 900px)').matches;
+
+        // DOM Elements
+        const cursorBlur = document.getElementById('cursor-blur');
+        const customCursor = document.getElementById('custom-cursor');
+        const mainContent = document.getElementById('main-content');
+
+        /* ==========================================================================
+           02. PROJECT RENDERING LOGIC
+           ========================================================================== */
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('slug');
+
+            if (!slug || typeof PROJECTS === 'undefined') {
+                renderNotFound(mainContent);
+                return;
+            }
+
+            const projectIndex = PROJECTS.findIndex(p => p.slug === slug);
+            if (projectIndex === -1) {
+                renderNotFound(mainContent);
+                return;
+            }
+
+            const project = PROJECTS[projectIndex];
+            const prevProject = projectIndex > 0 ? PROJECTS[projectIndex - 1] : null;
+            const nextProject = projectIndex < PROJECTS.length - 1 ? PROJECTS[projectIndex + 1] : null;
+
+            document.title = `SOLVD. ${project.name || project.title} - High-Tech Concept`;
+            
+            renderProject(project, prevProject, nextProject, mainContent);
+        });
+
+        // Renders fallback UI if project is not found
+        function renderNotFound(container) {
+            container.innerHTML = `
+                <div class="not-found">
+                    <h1 class="project-title title">project <span style="color:var(--text-muted)">not found.</span></h1>
+                    <a href="works.html" class="nav-btn" style="color: var(--accent-blue); text-decoration: underline;">return to works</a>
+                </div>
+            `;
+        }
+
+        // Utility to handle potentially empty array/string values
+        function parseField(value) {
+            if (value === null || value === undefined || value === '') return null;
+            if (Array.isArray(value)) {
+                if (value.length === 0) return null;
+                return value.join(', ');
+            }
+            if (typeof value === 'string' && value.trim() === '') return null;
+            return value;
+        }
+
+        // Renders the main project UI
+        async function renderProject(project, prev, next, container) {
+            let html = `
+                <div class="video-wrapper" id="vimeo-wrapper">
+                    <iframe src="https://player.vimeo.com/video/${project.vimeoId}?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" title="${project.title || project.name}"></iframe>
+                </div>
+
+                <div class="project-info-grid">
+            `;
+
+            // Setup fields dynamically
+            const projectFields = [
+                { label: 'Client', val: parseField(project.client) },
+                { label: 'Project', val: parseField(project.name) || parseField(project.title) },
+                { label: 'Director', val: parseField(project.director) },
+                { label: 'Scope', val: parseField(project.scope) }
+            ];
+
+            projectFields.forEach(field => {
+                if (field.val) {
+                    html += `
+                        <div class="info-block">
+                            <span class="info-label">${field.label}</span>
+                            <span class="info-value">${field.val}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            html += `
+                </div>
+                
+                <div class="project-nav">
+                    <a href="${prev ? `project.html?slug=${prev.slug}` : '#'}" class="nav-btn ${!prev ? 'disabled' : ''}">
+                        &larr; previous work
+                    </a>
+                    <a href="${next ? `project.html?slug=${next.slug}` : '#'}" class="nav-btn ${!next ? 'disabled' : ''}">
+                        next work &rarr;
+                    </a>
+                </div>
+            `;
+
+            container.innerHTML = html;
+
+            // Fetch specific aspect ratio from Vimeo API for responsive framing
+            if (project.vimeoId) {
+                try {
+                    const response = await fetch(`https://vimeo.com/api/oembed.json?url=https%3A%2F%2Fvimeo.com%2F${project.vimeoId}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.width && data.height) {
+                            const vimeoWrapper = document.getElementById('vimeo-wrapper');
+                            if (vimeoWrapper) {
+                                vimeoWrapper.style.aspectRatio = `${data.width} / ${data.height}`;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Using default aspect ratio. Could not fetch exact dimensions from Vimeo.');
+                }
+            }
+        }
+
+        /* ==========================================================================
+           03. CUSTOM CURSOR LOGIC
+           ========================================================================== */
+        // Centralized Mouse Move Event Tracker - Only updates state for performance
+        document.addEventListener('mousemove', (e) => {
+            absMouseX = e.clientX;
+            absMouseY = e.clientY;
+            
+            // Coordinates relative to screen center (used for parallax)
+            mouseX = (e.clientX - window.innerWidth / 2);
+            mouseY = (e.clientY - window.innerHeight / 2);
+
+            // Determine if mouse is over the video wrapper to hide custom cursor
+            if (e.target.closest('.video-wrapper')) {
+                isCursorOverVideo = true;
+            } else {
+                isCursorOverVideo = false;
+                if (customCursor.style.opacity !== '1') {
+                    customCursor.style.opacity = '1';
+                    cursorBlur.style.opacity = '1';
+                }
+            }
+        });
+
+        document.addEventListener('mouseenter', () => {
+            if (!isCursorOverVideo) {
+                customCursor.style.opacity = '1';
+                cursorBlur.style.opacity = '1';
+            }
+        });
+
+        document.addEventListener('mouseleave', () => {
+            customCursor.style.opacity = '0';
+            cursorBlur.style.opacity = '0';
+            // Send cursor away virtually to prevent grid canvas stretching
+            absMouseX = -1000;
+            absMouseY = -1000;
+        });
+
+        // Add 'hover' class to cursor when pointing over interactive elements
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('a, .nav-btn, .footer-link')) {
+                customCursor.classList.add('hover');
+            } else {
+                customCursor.classList.remove('hover');
+            }
+        });
+
+        // Hide custom cursor if focus moves inside iframe
+        window.addEventListener('blur', () => {
+            customCursor.style.opacity = '0';
+            cursorBlur.style.opacity = '0';
+        });
+        window.addEventListener('focus', () => {
+            if (!isCursorOverVideo) {
+                customCursor.style.opacity = '1';
+                cursorBlur.style.opacity = '1';
+            }
+        });
+
+        // Pause heavy animations when tab is hidden
+        document.addEventListener('visibilitychange', () => { 
+            isRunning = !document.hidden; 
+        });
+
+        /* ==========================================================================
+           04. INTERACTIVE CANVAS GRID
+           ========================================================================== */
+        const gridCanvas = document.getElementById('grid-canvas');
+        const ctx = gridCanvas.getContext('2d');
+        const spacing = 40; 
+        let points = [];
+        let cols, rows;
+
+        function initGrid() {
+            isMobile = window.matchMedia('(max-width: 900px)').matches;
+            gridCanvas.width = window.innerWidth;
+            gridCanvas.height = window.innerHeight;
+
+            if (isMobile) {
+                ctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+                return; 
+            }
+
+            cols = Math.ceil(gridCanvas.width / spacing) + 1;
+            rows = Math.ceil(gridCanvas.height / spacing) + 1;
+            points = [];
+            
+            for (let i = 0; i < cols; i++) {
+                points[i] = [];
+                for (let j = 0; j < rows; j++) {
+                    points[i][j] = { 
+                        baseX: i * spacing, 
+                        baseY: j * spacing, 
+                        x: i * spacing, 
+                        y: j * spacing 
+                    };
+                }
+            }
+        }
+
+        window.addEventListener('resize', initGrid);
+        initGrid();
+
+        function drawInteractiveGrid() {
+            if (isMobile) return;
+            ctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.04)'; 
+            ctx.lineWidth = 1;
+
+            // Update points coordinates based on mouse proximity
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    let p = points[i][j];
+                    let dx = absMouseX - p.baseX;
+                    let dy = absMouseY - p.baseY;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    let maxDist = 180; 
+                    let targetX = p.baseX;
+                    let targetY = p.baseY;
+
+                    // Apply magnetic repulsion force
+                    if (dist < maxDist) {
+                        let force = (maxDist - dist) / maxDist;
+                        targetX += dx * force * 0.4;
+                        targetY += dy * force * 0.4;
+                    }
+                    
+                    // Smooth easing towards target
+                    p.x += (targetX - p.x) * 0.25;
+                    p.y += (targetY - p.y) * 0.25;
+                }
+            }
+
+            // Draw horizontal lines
+            ctx.beginPath();
+            for (let j = 0; j < rows; j++) {
+                for (let i = 0; i < cols; i++) {
+                    if (i === 0) ctx.moveTo(points[i][j].x, points[i][j].y);
+                    else ctx.lineTo(points[i][j].x, points[i][j].y);
+                }
+            }
+            ctx.stroke();
+
+            // Draw vertical lines
+            ctx.beginPath();
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    if (j === 0) ctx.moveTo(points[i][j].x, points[i][j].y);
+                    else ctx.lineTo(points[i][j].x, points[i][j].y);
+                }
+            }
+            ctx.stroke();
+        }
+
+        /* ==========================================================================
+           05. GLOBAL PARALLAX & RENDER LOOP
+           ========================================================================== */
+        const parallaxElements = Array.from(document.querySelectorAll('[data-parallax]')).map(el => ({
+            element: el,
+            speed: parseFloat(el.getAttribute('data-parallax')) * 0.1
+        }));
+
+        let lastCanvasFrame = 0;
+        
+        function animate(time) {
+            requestAnimationFrame(animate);
+            if (!isRunning) return; 
+
+            // 1. Update Cursor Positions (Optimized: DOM writes inside requestAnimationFrame)
+            if (isCursorOverVideo) {
+                customCursor.style.opacity = '0';
+                cursorBlur.style.opacity = '0';
+            } else {
+                cursorBlur.style.transform = `translate3d(${absMouseX - 225}px, ${absMouseY - 225}px, 0)`;
+                // Slightly offset custom cursor similar to V18 logic
+                customCursor.style.transform = `translate3d(${absMouseX - 7}px, ${absMouseY - 7}px, 0)`;
+            }
+
+            // 2. Calculate smoothed mouse position for parallax
+            const ease = 0.05;
+            currentX += (mouseX - currentX) * ease;
+            currentY += (mouseY - currentY) * ease;
+
+            // 3. Apply global background/container parallax
+            parallaxElements.forEach(item => {
+                if(item.element) {
+                    item.element.style.transform = `translate3d(${currentX * item.speed}px, ${currentY * item.speed}px, 0)`;
+                }
+            });
+
+            // 4. Throttle canvas grid drawing to ~30 FPS for performance
+            if (time - lastCanvasFrame >= 33) {
+                drawInteractiveGrid();
+                lastCanvasFrame = time;
+            }
+        }
+        
+        requestAnimationFrame(animate);
+
+    </script>
+</body>
+</html>
