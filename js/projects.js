@@ -123,10 +123,10 @@ const PROJECTS = [
     director: "",
     scope: ["Full-Cycle Production"],
 
-    poster: "assets/works/7_yandex_pay/img.jpg",
+    poster: "assets/works/7_ya_pay/img.jpg",
 
-    previewWebm: "assets/works/7_yandex_pay/vid.webm",
-    previewMp4: "assets/works/7_yandex_pay/vid.mp4",
+    previewWebm: "assets/works/7_ya_pay/vid.webm",
+    previewMp4: "assets/works/7_ya_pay/vid.mp4",
 
     vimeoId: "777777777"
   },
