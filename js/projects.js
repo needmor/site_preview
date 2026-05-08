@@ -8,7 +8,7 @@ const PROJECTS = [
     client: "Yandex Go",
     name: "Yandex Go Serbia",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["Creative Direction", "Full-Cycle Production"],
 
     poster: "assets/works/1_ya_serb/img.jpg",
 
@@ -27,14 +27,14 @@ const PROJECTS = [
     client: "Mastercard",
     name: "Mastercard",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["Creative Direction", "Full-Cycle Production"],
 
     poster: "assets/works/2_mastercard/img.jpg",
 
     previewWebm: "assets/works/2_mastercard/vid.webm",
     previewMp4: "assets/works/2_mastercard/vid.mp4",
 
-    vimeoId: "987654321"
+    vimeoId: "1164502162"
   },
 
   {
@@ -46,7 +46,7 @@ const PROJECTS = [
     client: "KIA",
     name: "KIA",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["Creative Direction", "Full-Cycle Production"],
 
     poster: "assets/works/3_KIA/img.jpg",
 
@@ -65,7 +65,7 @@ const PROJECTS = [
     client: "Yandex Go",
     name: "Yandex Go",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["Creative Direction", "Full-Cycle Production"],
 
     poster: "assets/works/4_ya_charge/img.jpg",
 
@@ -84,7 +84,7 @@ const PROJECTS = [
     client: "Chanel",
     name: "Chanel",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["Creative Direction", "Full-Cycle Production"],
 
     poster: "assets/works/5_chanel/img.jpg",
 
@@ -102,7 +102,7 @@ const PROJECTS = [
     client: "X5 Retail Group",
     name: "Taste and Benefits",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["VFX", "Postproduction"],
 
     poster: "assets/works/6_X5_Group/img.jpg",
 
@@ -121,7 +121,7 @@ const PROJECTS = [
     client: "Yandex",
     name: "Yandex Pay",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["Full-Cycle Production"],
 
     poster: "assets/works/7_yandex_pay/img.jpg",
 
@@ -140,7 +140,7 @@ const PROJECTS = [
     client: "Rostelecom",
     name: "Tariff Constructor",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["VFX"],
 
     poster: "assets/works/8_3d_Rostelecom/img.jpg",
 
@@ -159,7 +159,7 @@ const PROJECTS = [
     client: "Magnit",
     name: "Magnit",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["CG"],
 
     poster: "assets/works/9_magnit/img.jpg",
 
@@ -178,7 +178,7 @@ const PROJECTS = [
     client: "L'Oréal",
     name: "Molecular Restoration",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["VFX", "Postproduction"],
 
     poster: "assets/works/10_3d_Loreal/img.jpg",
 
@@ -197,7 +197,7 @@ const PROJECTS = [
     client: "BORK",
     name: "BORK",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["CG", "Postproduction"],
 
     poster: "assets/works/11_3d_BORK/img.jpg",
 
@@ -216,7 +216,7 @@ const PROJECTS = [
     client: "real",
     name: "real",
     director: "",
-    scope: ["Creative Direction", "AI Production", "VFX", "Postproduction"],
+    scope: ["Creative Direction", "Full-Cycle Production"],
 
     poster: "assets/works/14_3d_real_2026/img.jpg",
 

@@ -269,6 +269,9 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            /* Expanded hit area logic */
+            padding: 15px;
+            margin: -15px; 
         }
 
         .nav-btn:hover:not(.disabled) {
@@ -357,7 +360,8 @@
             .contact-footer { display: flex; flex-direction: column; text-align: left; }
             .footer-socials { text-align: left; }
             .nav-menu { display: none; } 
-            .project-nav { flex-direction: column; gap: 30px; }
+            /* Added slightly more gap to accommodate expanded hitboxes safely */
+            .project-nav { flex-direction: column; gap: 40px; }
             .video-wrapper { transform: none !important; }
 
             .footer-bottom {
