@@ -15,7 +15,7 @@ const PROJECTS = [
     previewWebm: "assets/works/1_ya_serb/vid.webm",
     previewMp4: "assets/works/1_ya_serb/vid.mp4",
 
-    vimeoId: "123456789"
+    vimeoId: "1174483478"
   },
 
   {
@@ -53,63 +53,7 @@ const PROJECTS = [
     previewWebm: "assets/works/3_KIA/vid.webm",
     previewMp4: "assets/works/3_KIA/vid.mp4",
 
-    vimeoId: "555555555"
-  },
-
-  {
-    id: 4,
-
-    slug: "yandex-go-charge",
-    title: "Yandex Go Charge",
-
-    client: "Yandex Go",
-    name: "Yandex Go",
-    director: "",
-    scope: ["Creative Direction", "Full-Cycle Production"],
-
-    poster: "assets/works/4_ya_charge/img.jpg",
-
-    previewWebm: "assets/works/4_ya_charge/vid.webm",
-    previewMp4: "assets/works/4_ya_charge/vid.mp4",
-
-    vimeoId: "444444444"
-  },
-
-  {
-    id: 5,
-
-    slug: "chanel",
-    title: "Chanel",
-
-    client: "Chanel",
-    name: "Chanel",
-    director: "",
-    scope: ["Creative Direction", "Full-Cycle Production"],
-
-    poster: "assets/works/5_chanel/img.jpg",
-
-    previewWebm: "assets/works/5_chanel/vid.webm",
-    previewMp4: "assets/works/5_chanel/vid.mp4",
-
-    vimeoId: "222222222"
-  },
-    {
-    id: 6,
-
-    slug: "x5-taste-and-benefits",
-    title: "X5 Retail Group",
-
-    client: "X5 Retail Group",
-    name: "Taste and Benefits",
-    director: "",
-    scope: ["VFX", "Postproduction"],
-
-    poster: "assets/works/6_X5_Group/img.jpg",
-
-    previewWebm: "assets/works/6_X5_Group/vid.webm",
-    previewMp4: "assets/works/6_X5_Group/vid.mp4",
-
-    vimeoId: "666666666"
+    vimeoId: "1164502315"
   },
 
   {
@@ -128,7 +72,63 @@ const PROJECTS = [
     previewWebm: "assets/works/7_ya_pay/vid.webm",
     previewMp4: "assets/works/7_ya_pay/vid.mp4",
 
-    vimeoId: "777777777"
+    vimeoId: "1190529056"
+  },
+
+  {
+    id: 5,
+
+    slug: "chanel",
+    title: "Chanel",
+
+    client: "Chanel",
+    name: "Chanel",
+    director: "",
+    scope: ["Creative Direction", "Full-Cycle Production"],
+
+    poster: "assets/works/5_chanel/img.jpg",
+
+    previewWebm: "assets/works/5_chanel/vid.webm",
+    previewMp4: "assets/works/5_chanel/vid.mp4",
+
+    vimeoId: "1164502236"
+  },
+    {
+    id: 6,
+
+    slug: "x5-taste-and-benefits",
+    title: "X5 Retail Group",
+
+    client: "X5 Retail Group",
+    name: "Taste and Benefits",
+    director: "",
+    scope: ["VFX", "Postproduction"],
+
+    poster: "assets/works/6_X5_Group/img.jpg",
+
+    previewWebm: "assets/works/6_X5_Group/vid.webm",
+    previewMp4: "assets/works/6_X5_Group/vid.mp4",
+
+    vimeoId: "1190528736"
+  },
+
+  {
+    id: 4,
+
+    slug: "yandex-go-charge",
+    title: "Yandex Go Charge",
+
+    client: "Yandex Go",
+    name: "Yandex Go Charge",
+    director: "",
+    scope: ["Creative Direction", "Full-Cycle Production"],
+
+    poster: "assets/works/4_ya_charge/img.jpg",
+
+    previewWebm: "assets/works/4_ya_charge/vid.webm",
+    previewMp4: "assets/works/4_ya_charge/vid.mp4",
+
+    vimeoId: "1190528394"
   },
 
   {
@@ -147,26 +147,26 @@ const PROJECTS = [
     previewWebm: "assets/works/8_3d_Rostelecom/vid.webm",
     previewMp4: "assets/works/8_3d_Rostelecom/vid.mp4",
 
-    vimeoId: "888888888"
+    vimeoId: "1190529611"
   },
 
   {
-    id: 9,
+    id: 13,
 
-    slug: "magnit",
-    title: "Magnit",
+    slug: "salomon",
+    title: "Salomon",
 
-    client: "Magnit",
-    name: "Magnit",
+    client: "Salomon",
+    name: "Salomon",
     director: "",
-    scope: ["CG"],
+    scope: ["Creative Direction", "Full-Cycle Production"],
 
-    poster: "assets/works/9_magnit/img.jpg",
+    poster: "assets/works/13_salomon/img.jpg",
 
-    previewWebm: "assets/works/9_3d_Magnit/vid.webm",
-    previewMp4: "assets/works/9_3d_Magnit/vid.mp4",
+    previewWebm: "assets/works/13_salomon/vid.webm",
+    previewMp4: "assets/works/13_salomon/vid.mp4",
 
-    vimeoId: "999999999"
+    vimeoId: "1190528433"
   },
 
   {
@@ -185,7 +185,7 @@ const PROJECTS = [
     previewWebm: "assets/works/10_3d_Loreal/vid.webm",
     previewMp4: "assets/works/10_3d_Loreal/vid.mp4",
 
-    vimeoId: "101010101"
+    vimeoId: "1190529881"
   },
 
   {
@@ -204,10 +204,10 @@ const PROJECTS = [
     previewWebm: "assets/works/11_3d_BORK/vid.webm",
     previewMp4: "assets/works/11_3d_BORK/vid.mp4",
 
-    vimeoId: "111111111"
+    vimeoId: "1190530070"
   },
 
-  {
+ /* {
     id: 12,
 
     slug: "real",
@@ -224,5 +224,44 @@ const PROJECTS = [
     previewMp4: "assets/works/14_3d_real_2026/vid.mp4",
 
     vimeoId: "121212121"
+  }, */
+
+    {
+    id: 13,
+
+    slug: "burger-king",
+    title: "Burger King",
+
+    client: "Burger King",
+    name: "Burger King",
+    director: "",
+    scope: ["Creative Direction", "Full-Cycle Production"],
+
+    poster: "assets/works/12_burger King/img.jpg",
+
+    previewWebm: "assets/works/12_burger King/vid.webm",
+    previewMp4: "assets/works/12_burger King/vid.mp4",
+
+    vimeoId: "1190528587"
   },
+
+  {
+    id: 9,
+
+    slug: "magnit",
+    title: "Magnit",
+
+    client: "Magnit",
+    name: "Magnit",
+    director: "",
+    scope: ["CG"],
+
+    poster: "assets/works/9_magnit/img.jpg",
+
+    previewWebm: "assets/works/9_3d_Magnit/vid.webm",
+    previewMp4: "assets/works/9_3d_Magnit/vid.mp4",
+
+    vimeoId: "1190529792"
+  },
+
 ];
