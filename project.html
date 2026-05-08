@@ -151,7 +151,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10vh;
+            margin-bottom: 4vh; /* Изменено с 10vh для поднятия контента */
         }
 
         .logo {
@@ -190,10 +190,12 @@
         /* ==========================================================================
            05. PROJECT DETAILS LAYOUT
            ========================================================================== */
-        /* Responsive Video Container */
+        /* Responsive Video Container - Обновленная логика расчета ширины и высоты */
         .video-wrapper {
+            --video-ratio: 1.7778; /* Дефолт 16/9 */
             width: 100%;
-            max-width: 1100px;
+            /* Ширина ограничивается либо 1100px, либо максимальной шириной, при которой высота не превышает 75vh */
+            max-width: min(1100px, calc(75vh * var(--video-ratio)));
             margin: 0 auto; 
             background-color: #000;
             border-radius: var(--card-radius);
@@ -202,8 +204,8 @@
             box-shadow: 0 4px 30px rgba(0,0,0,0.06);
             border: 1px solid var(--grid-border);
             z-index: 20;
-            aspect-ratio: 16 / 9;
-            transition: aspect-ratio 0.4s ease;
+            aspect-ratio: var(--video-ratio);
+            transition: max-width 0.4s ease, aspect-ratio 0.4s ease;
         }
 
         .video-wrapper iframe {
@@ -289,6 +291,22 @@
             pointer-events: none;
         }
 
+        /* Кнопка "Смотреть все" для мобильной версии */
+        .btn-view-all {
+            padding: 14px 32px; border-radius: 50px; border: 1px solid rgba(0, 85, 255, 0.3);
+            background: rgba(255, 255, 255, 0.5); font-family: var(--font-mono); font-size: 12px;
+            color: var(--text-main); text-decoration: none; text-transform: lowercase;
+            letter-spacing: 1px; transition: all 0.4s ease; position: relative; z-index: 10;
+        }
+
+        .btn-view-all:hover {
+            background: #fff; box-shadow: 0 0 20px rgba(0, 85, 255, 0.2); transform: translateY(-2px);
+        }
+
+        .mobile-view-all {
+            display: none; /* Скрыта на десктопе */
+        }
+
         /* Not Found Message */
         .not-found {
             text-align: center;
@@ -365,6 +383,10 @@
             .contact-footer { display: flex; flex-direction: column; text-align: left; }
             .footer-socials { text-align: left; }
             .nav-menu { display: none; } 
+            
+            /* Отображаем кнопку "view all" на мобильных устройствах */
+            .mobile-view-all { display: inline-flex; justify-content: center; }
+
             /* Added slightly more gap to accommodate expanded hitboxes safely */
             .project-nav { flex-direction: column; gap: 40px; }
             .video-wrapper { transform: none !important; }
@@ -547,6 +569,7 @@
                 }
             });
 
+            /* Добавлена мобильная кнопка "view all projects" */
             html += `
                 </div>
                 
@@ -554,6 +577,7 @@
                     <a href="${prev ? `project.html?slug=${prev.slug}` : '#'}" class="nav-btn ${!prev ? 'disabled' : ''}">
                         &larr; previous work
                     </a>
+                    <a href="works.html" class="btn-view-all mobile-view-all">view all projects</a>
                     <a href="${next ? `project.html?slug=${next.slug}` : '#'}" class="nav-btn ${!next ? 'disabled' : ''}">
                         next work &rarr;
                     </a>
@@ -571,7 +595,10 @@
                         if (data.width && data.height) {
                             const vimeoWrapper = document.getElementById('vimeo-wrapper');
                             if (vimeoWrapper) {
-                                vimeoWrapper.style.aspectRatio = `${data.width} / ${data.height}`;
+                                // Теперь мы меняем CSS переменную, а не сам aspect-ratio
+                                // Это заставит ширину динамически сжаться под высоту (max 75vh) без черных полос
+                                const ratio = data.width / data.height;
+                                vimeoWrapper.style.setProperty('--video-ratio', ratio);
                             }
                         }
                     }
@@ -622,7 +649,7 @@
 
         // Add 'hover' class to cursor when pointing over interactive elements
         document.addEventListener('mouseover', (e) => {
-            if (e.target.closest('a, .nav-btn, .footer-link')) {
+            if (e.target.closest('a, .nav-btn, .footer-link, .btn-view-all')) {
                 customCursor.classList.add('hover');
             } else {
                 customCursor.classList.remove('hover');
