@@ -632,7 +632,7 @@
             const prevProject = projectIndex > 0 ? PROJECTS[projectIndex - 1] : null;
             const nextProject = projectIndex < PROJECTS.length - 1 ? PROJECTS[projectIndex + 1] : null;
 
-            document.title = `SOLVD. ${project.name || project.title} - High-Tech Concept`;
+            document.title = `SOLVD. ${project.name || project.title}`;
             
             renderProject(project, prevProject, nextProject, mainContent);
         });
